@@ -29,13 +29,18 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
                 added.put(process.getName() , 1);
             }
         }
-        while(readyQueue.size()>0){
+        while(added.size()<processes.size()){
         for(Process process : processes){
             if(process.getArrivalTime() <= time && !added.containsKey(process.getName())){
                 readyQueue.add(process);
                 added.put(process.getName() , 1);
             }
         }
+            Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
+            System.out.println(p.getName());
+            time += p.getBurstTime(); // add the burst time of the process to the time
+        }
+        while(!readyQueue.isEmpty()){
             Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
             System.out.println(p.getName());
             time += p.getBurstTime(); // add the burst time of the process to the time
@@ -54,13 +59,19 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
                 added.put(process.getName() , 1);
             }
         }
-        while(readyQueue.size() > 0){
+        while(added.size()<processes.size()){
             for(Process process : processes){
                 if(process.getArrivalTime() <= time && !added.containsKey(process.getName())){
                     readyQueue.add(process);
                     added.put(process.getName() , 1);
                 }
             }
+            Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
+            System.out.println(p.getName() + " : " + (time - p.getArrivalTime()));
+            totalWaitingTime += (time - p.getArrivalTime());
+            time += p.getBurstTime(); // add the burst time of the process to the time
+        }
+        while(!readyQueue.isEmpty()){
             Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
             System.out.println(p.getName() + " : " + (time - p.getArrivalTime()));
             totalWaitingTime += (time - p.getArrivalTime());
@@ -92,16 +103,22 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
             totalTurnAroundTime += (time + p.getBurstTime() - p.getArrivalTime());
             time += p.getBurstTime(); // add the burst time of the process to the time
         }
+        while(!readyQueue.isEmpty()){
+            Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
+            System.out.println(p.getName() + " : " + (time + p.getBurstTime() - p.getArrivalTime()));
+            totalTurnAroundTime += (time + p.getBurstTime() - p.getArrivalTime());
+            time += p.getBurstTime(); // add the burst time of the process to the time
+        }
     }
 
     @Override
-    public int getAverageWaitingTime() {
-        return totalWaitingTime / processes.size();
+    public double getAverageWaitingTime() {
+        return (double)totalWaitingTime / processes.size();
 
     }
 
     @Override
-    public int getAverageTurnAroundTime() {
-        return totalTurnAroundTime / processes.size();
+    public double getAverageTurnAroundTime() {
+        return (double)totalTurnAroundTime / processes.size();
     }
 }
