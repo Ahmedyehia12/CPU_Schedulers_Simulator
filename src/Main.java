@@ -8,7 +8,7 @@ public class Main {
         processes.add(new Process("P3" , "green" , 0 , 3 , 3));
         processes.add(new Process("P4" , "yellow" , 0 , 7 , 4));
         processes.add(new Process("P5" , "purple" , 0 , 12 , 5));
-        SchedulingAlgorithm sjf = new ShortestJobFirst(processes);
+        SchedulingAlgorithm sjf = new ShortestJobFirst(processes , 1);
         sjf.getExecutionOrder();
         sjf.getWaitingTime();
         sjf.getTurnAroundTime();
