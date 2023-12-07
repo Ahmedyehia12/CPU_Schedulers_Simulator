@@ -7,7 +7,7 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
     private PriorityQueue<Process> readyQueue;
     private List<Process> processes;
     public int totalWaitingTime = 0;
-    public int contextSwitchTime = 0;
+    public int contextSwitchTime;
     public int totalTurnAroundTime = 0;
     public ShortestJobFirst(List<Process> processes, int contextSwitchTime) {
         this.contextSwitchTime = contextSwitchTime;
@@ -25,12 +25,6 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
         readyQueue.clear();
         int time = 0;
         HashMap<String , Integer>added = new HashMap<>(); // to check if the process is already added to the ready queue
-        for(Process process : processes){
-            if(process.getArrivalTime() <= time && !added.containsKey(process.getName())){
-                readyQueue.add(process);
-                added.put(process.getName() , 1);
-            }
-        }
         while(added.size()<processes.size()){
         for(Process process : processes){
             if(process.getArrivalTime() <= time && !added.containsKey(process.getName())){
@@ -38,10 +32,15 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
                 added.put(process.getName() , 1);
             }
         }
+            if(!readyQueue.isEmpty()){
             Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
             System.out.println(p.getName());
             time += p.getBurstTime(); // add the burst time of the process to the time
             time += contextSwitchTime; // add the context switch time to the time
+            }
+            else{
+                time++; // if the ready queue is empty , increment the time by 1
+            }
         }
         while(!readyQueue.isEmpty()){
             Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
@@ -53,16 +52,11 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
 
     @Override
     public void getWaitingTime() {
+        totalWaitingTime = 0;
         System.out.println("Waiting Time : ");
         readyQueue.clear(); // clear the ready queue
         int time = 0;
         HashMap<String , Integer>added = new HashMap<>(); // to check if the process is already added to the ready queue
-        for(Process process : processes){
-            if(process.getArrivalTime() <= time){
-                readyQueue.add(process);
-                added.put(process.getName() , 1);
-            }
-        }
         while(added.size() < processes.size()){
             for(Process process : processes){
                 if(process.getArrivalTime() <= time && !added.containsKey(process.getName())){
@@ -70,11 +64,16 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
                     added.put(process.getName() , 1);
                 }
             }
-            Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
-            System.out.println(p.getName() + " : " + (time - p.getArrivalTime()));
-            totalWaitingTime += (time - p.getArrivalTime());
-            time += p.getBurstTime(); // add the burst time of the process to the time
-            time += contextSwitchTime; // add the context switch time to the time
+            if(!readyQueue.isEmpty()) {
+                Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
+                System.out.println(p.getName() + " : " + (time - p.getArrivalTime()));
+                totalWaitingTime += (time - p.getArrivalTime());
+                time += p.getBurstTime(); // add the burst time of the process to the time
+                time += contextSwitchTime; // add the context switch time to the time
+            }
+            else{
+                time++; // if the ready queue is empty , increment the time by 1
+            }
         }
         while(!readyQueue.isEmpty()){
             Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
@@ -88,28 +87,28 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
 
     @Override
     public void getTurnAroundTime() {
+        totalTurnAroundTime = 0;
         System.out.println("Turn Around Time : ");
         readyQueue.clear(); // clear the ready queue
         int time = 0;
         HashMap<String , Integer>added = new HashMap<>(); // to check if the process is already added to the ready queue
-        for(Process process : processes){
-            if(process.getArrivalTime() <= time){
-                readyQueue.add(process);
-                added.put(process.getName() , 1);
-            }
-        }
-        while(readyQueue.size() > 0){
+        while(added.size() < processes.size()){
             for(Process process : processes){
                 if(process.getArrivalTime() <= time && !added.containsKey(process.getName())){
                     readyQueue.add(process);
                     added.put(process.getName() , 1);
                 }
             }
+            if(!readyQueue.isEmpty()){
             Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
             System.out.println(p.getName() + " : " + (time + p.getBurstTime() - p.getArrivalTime()));
             totalTurnAroundTime += (time + p.getBurstTime() - p.getArrivalTime());
             time += p.getBurstTime(); // add the burst time of the process to the time
             time += contextSwitchTime; // add the context switch time to the time
+            }
+            else{
+                time++;
+            }
         }
         while(!readyQueue.isEmpty()){
             Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it

@@ -30,19 +30,37 @@ public class Process {
     public int getArrivalTime(){
         return arrivalTime;
     }
+    public void setArrivalTime(int arrivalTime){
+        this.arrivalTime = arrivalTime;
+    }
     public int getBurstTime(){
         return burstTime;
+    }
+    public void setBurstTime(int burstTime){
+        this.burstTime = burstTime;
     }
     public int getPriority(){
         return priority;
     }
+    public void setPriority(int priority){
+        this.priority = priority;
+    }
     public String getName(){
         return name;
+    }
+    public void setName(String name){
+        this.name = name;
     }
     public String getColor(){
         return color;
     }
+    public void setColor(String color){
+        this.color = color;
+    }
     public int getAGFactor(){
         return AGFactor;
+    }
+    public void setAGFactor(int AGFactor){
+        this.AGFactor = AGFactor;
     }
 }
