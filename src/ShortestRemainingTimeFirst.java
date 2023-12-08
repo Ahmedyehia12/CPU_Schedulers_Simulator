@@ -30,12 +30,13 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
         int time = 0;
         HashMap<String , Integer> added = new HashMap<>(); // to check if the process is already added to the ready queue
         while(added.size()<processes.size()){
-            for(Process process : processes){
-                if(process.getArrivalTime() <= time && !added.containsKey(process.getName())){
-                    readyQueue.add(process);
-                    added.put(process.getName() , 1);
-                }
-            }
+//            for(Process process : processes){
+//                if(process.getArrivalTime() <= time && !added.containsKey(process.getName())){
+//                    readyQueue.add(process);
+//                    added.put(process.getName() , 1);
+//                }
+//            }
+            addNewProcesses(time , added);
             if(readyQueue.isEmpty()){
                 time++;
                 continue;
@@ -43,16 +44,17 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
             Process p = readyQueue.poll();
             int jobTime = p.getBurstTime(); // current remaining time of the process
             for(int i = time ;i<= (time+p.getBurstTime()) ;i++){  // loop from the current time to the current time + the burst time of the process
-                for(Process process : processes){ // check if there is a process arrived in this time
-                    if(process.getArrivalTime() <= i && !added.containsKey(process.getName())){ // if there is a process arrived in this time and it's not added to the ready queue
-                        readyQueue.add(process); // add it to the ready queue
-                        added.put(process.getName() , 1); // mark it as added
-                    }
-                }
+//                for(Process process : processes){ // check if there is a process arrived in this time
+//                    if(process.getArrivalTime() <= i && !added.containsKey(process.getName())){ // if there is a process arrived in this time and it's not added to the ready queue
+//                        readyQueue.add(process); // add it to the ready queue
+//                        added.put(process.getName() , 1); // mark it as added
+//                    }
+//                }
+                addNewProcesses(i , added);
                 if(!readyQueue.isEmpty()){ // if the ready queue is not empty
                     if(readyQueue.peek().getBurstTime()< jobTime - (i-time)){
                         p.setBurstTime(jobTime - (i-time)); // update the remaining time of the process
-                        if(p.getBurstTime() == 0){ // if the process is finished
+                     if(p.getBurstTime() == 0){ // if the process is finished // TODO
                             if(waitingTime.containsKey(p.getName())){
                                 waitingTime.put(p.getName() , waitingTime.get(p.getName()) + (time - p.getArrivalTime()));
                             }
@@ -91,6 +93,15 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
             time += contextSwitchTime;
         }
     }
+
+    void addNewProcesses(int time , HashMap<String , Integer> added){
+        for(Process process : processes){
+            if(process.getArrivalTime() <= time && !added.containsKey(process.getName())){
+                readyQueue.add(process);
+                added.put(process.getName() , 1);
+            }
+        }
+    }
     @Override
     public void getWaitingTime() {
         System.out.println("Waiting Time : ");
@@ -99,12 +110,13 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
         int time = 0;
         HashMap<String , Integer> added = new HashMap<>(); // to check if the process is already added to the ready queue
         while(added.size()<processes.size()){
-            for(Process process : processes){
-                if(process.getArrivalTime() <= time && !added.containsKey(process.getName())){
-                    readyQueue.add(process);
-                    added.put(process.getName() , 1);
-                }
-            }
+//            for(Process process : processes){
+//                if(process.getArrivalTime() <= time && !added.containsKey(process.getName())){
+//                    readyQueue.add(process);
+//                    added.put(process.getName() , 1);
+//                }
+//            }
+            addNewProcesses(time , added);
             if(readyQueue.isEmpty()){
                 time++;
                 continue;
@@ -112,12 +124,13 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
             Process p = readyQueue.poll();
             int jobTime = p.getBurstTime(); // current remaining time of the process
             for(int i = time ;i<= (time+p.getBurstTime()) ;i++){  // loop from the current time to the current time + the burst time of the process
-                for(Process process : processes){ // check if there is a process arrived in this time
-                    if(process.getArrivalTime() <= i && !added.containsKey(process.getName())){ // if there is a process arrived in this time and it's not added to the ready queue
-                        readyQueue.add(process); // add it to the ready queue
-                        added.put(process.getName() , 1); // mark it as added
-                    }
-                }
+//                for(Process process : processes){ // check if there is a process arrived in this time
+//                    if(process.getArrivalTime() <= i && !added.containsKey(process.getName())){ // if there is a process arrived in this time and it's not added to the ready queue
+//                        readyQueue.add(process); // add it to the ready queue
+//                        added.put(process.getName() , 1); // mark it as added
+//                    }
+//                }
+                addNewProcesses(i , added);
                 if(!readyQueue.isEmpty()){ // if the ready queue is not empty
                     if(readyQueue.peek().getBurstTime()< jobTime - (i-time)){
                         p.setBurstTime(jobTime - (i-time)); // update the remaining time of the process
@@ -181,12 +194,13 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
         int time = 0;
         HashMap<String , Integer> added = new HashMap<>(); // to check if the process is already added to the ready queue
         while(added.size()<processes.size()){
-            for(Process process : processes){
-                if(process.getArrivalTime() <= time && !added.containsKey(process.getName())){
-                    readyQueue.add(process);
-                    added.put(process.getName() , 1);
-                }
-            }
+//            for(Process process : processes){
+//                if(process.getArrivalTime() <= time && !added.containsKey(process.getName())){
+//                    readyQueue.add(process);
+//                    added.put(process.getName() , 1);
+//                }
+//            }
+            addNewProcesses(time , added);
             if(readyQueue.isEmpty()){
                 time++;
                 continue;
