@@ -9,10 +9,8 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
     HashMap<Process , Integer>currentWaiting = new HashMap<>();
     int limit;
     HashMap<String , Integer>turnAroundTime = new HashMap<>();
-    public int contextSwitchTime = 0;
     HashMap<Process , Integer> waitingTime = new HashMap<>();
-    public ShortestRemainingTimeFirst(List<Process> processes , int contextSwitchTime , int limit) {
-        this.contextSwitchTime = contextSwitchTime;
+    public ShortestRemainingTimeFirst(List<Process> processes, int limit) {
         readyQueue = new  PriorityQueue<>(processes.size() , new Comparator<Process>() { // min heap , the process with the shortest burst time will be at the top
             @Override
             public int compare(Process o1, Process o2) {

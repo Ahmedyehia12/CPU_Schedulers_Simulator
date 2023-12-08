@@ -35,7 +35,7 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
         }
             if(!readyQueue.isEmpty()){
             Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
-            System.out.println(p.getName());
+            System.out.println(p.getName() + " entered cpu at : " + time);
             waitingTime.put(p, time - p.getArrivalTime());
             time += p.getBurstTime(); // add the burst time of the process to the time
             time += contextSwitchTime; // add the context switch time to the time
@@ -47,7 +47,7 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
         while(!readyQueue.isEmpty()){
             Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
             waitingTime.put(p , time - p.getArrivalTime());
-            System.out.println(p.getName());
+            System.out.println(p.getName() + " entered cpu at : " + time);
             time += p.getBurstTime(); // add the burst time of the process to the time
             time += contextSwitchTime; // add the context switch time to the time
         }
