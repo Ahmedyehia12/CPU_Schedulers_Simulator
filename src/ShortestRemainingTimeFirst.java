@@ -6,10 +6,12 @@ import java.util.PriorityQueue;
 public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same as ShortestJobFirst but preemptive
     private PriorityQueue<Process> readyQueue;
     private List<Process> processes;
+    HashMap<Process , Integer>currentWaiting = new HashMap<>();
+    int limit;
     HashMap<String , Integer>turnAroundTime = new HashMap<>();
     public int contextSwitchTime = 0;
     HashMap<Process , Integer> waitingTime = new HashMap<>();
-    public ShortestRemainingTimeFirst(List<Process> processes , int contextSwitchTime) {
+    public ShortestRemainingTimeFirst(List<Process> processes , int contextSwitchTime , int limit) {
         this.contextSwitchTime = contextSwitchTime;
         readyQueue = new  PriorityQueue<>(processes.size() , new Comparator<Process>() { // min heap , the process with the shortest burst time will be at the top
             @Override
@@ -18,8 +20,24 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
             }
         });
         this.processes = processes;
+        this.limit = limit;
         for(Process p : processes){
             turnAroundTime.put(p.getName() , p.getBurstTime());
+        }
+    }
+    public Process getProcess(){
+        for(Process process : readyQueue){
+           if(currentWaiting.containsKey(process) && currentWaiting.get(process) >= limit)
+               return process;
+        }
+        return null;
+    }
+    public void updateCurrentWaiting(){
+        for(Process process : readyQueue){
+            if(currentWaiting.containsKey(process))
+                currentWaiting.put(process , currentWaiting.get(process) + 1);
+            else
+                currentWaiting.put(process , 1);
         }
     }
     @Override
@@ -28,12 +46,16 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
         readyQueue.clear();
         waitingTime.clear();
         int time = 0;
-        HashMap<String , Integer>added = new HashMap<>(); // to check if the process is already added to the ready queue
+        HashMap<String , Integer>added = new HashMap<>();
         while(added.size()<processes.size()){
             addNewProcesses(time , added);
             if(!readyQueue.isEmpty()){
-                Process p = readyQueue.poll();
-                System.out.println(p.getName() + " entered cpu at : " + time);
+                Process p =getProcess();
+                if(p == null){
+                    p = readyQueue.poll();
+                }
+                currentWaiting.put(p , 0); // reset the waiting time of the process
+                System.out.println(p.getName() + " entered cpu at : " + time); // print the name of the process
                 int i;
                 for(i = time ; i<= time + p.getBurstTime() ; i++){
                     addNewProcesses(i , added);
@@ -52,6 +74,7 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
                             System.out.println(p.getName() + " entered cpu at : " + i);
                         }
                     }
+                    updateCurrentWaiting();
                 }
                 if(waitingTime.containsKey(p))
                     waitingTime.put(p , waitingTime.get(p) + time - p.getArrivalTime());
@@ -65,7 +88,10 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
         }
         while(!readyQueue.isEmpty()){
             Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
-            waitingTime.put(p , time - p.getArrivalTime());
+            if(waitingTime.containsKey(p))
+                waitingTime.put(p , waitingTime.get(p) + time - p.getArrivalTime());
+            else
+                waitingTime.put(p , time - p.getArrivalTime());
             System.out.println(p.getName() + " entered cpu at : " + time);
             time += p.getBurstTime(); // add the burst time of the process to the time
             time += contextSwitchTime; // add the context switch time to the time
