@@ -7,6 +7,8 @@ public class Process {
     private int burstTime;
     private int priority;
     private int AGFactor;
+    private int dynamicPriority;
+    private int dynamicBurstTime;
 
 
     public Process(String name, String color, int arrivalTime, int burstTime, int priority) {
@@ -15,6 +17,8 @@ public class Process {
         this.arrivalTime = arrivalTime;
         this.burstTime = burstTime;
         this.priority = priority;
+        dynamicPriority = priority;
+        dynamicBurstTime = burstTime;
         Random rand = new Random();
         int rf = rand.nextInt(20);
         if(rf < 10){
@@ -37,13 +41,27 @@ public class Process {
         return burstTime;
     }
     public void setBurstTime(int burstTime){
+        this.dynamicBurstTime = burstTime;
         this.burstTime = burstTime;
     }
     public int getPriority(){
         return priority;
     }
     public void setPriority(int priority){
+        this.dynamicPriority = priority;
         this.priority = priority;
+    }
+    public void setDynamicPriority(int dynamicPriority){
+        this.dynamicPriority = dynamicPriority;
+    }
+    public int getDynamicPriority(){
+        return dynamicPriority;
+    }
+    public void setDynamicBurstTime(int dynamicBurstTime){
+        this.dynamicBurstTime = dynamicBurstTime;
+    }
+    public int getDynamicBurstTime(){
+        return dynamicBurstTime;
     }
     public String getName(){
         return name;
