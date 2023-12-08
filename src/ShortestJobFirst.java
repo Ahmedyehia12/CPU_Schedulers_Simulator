@@ -9,6 +9,7 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
     public int totalWaitingTime = 0;
     public int contextSwitchTime;
     public int totalTurnAroundTime = 0;
+    HashMap<Process , Integer>waitingTime = new HashMap<>();
     public ShortestJobFirst(List<Process> processes, int contextSwitchTime) {
         this.contextSwitchTime = contextSwitchTime;
        readyQueue = new  PriorityQueue<>(processes.size() , new Comparator<Process>() { // min heap , the process with the shortest burst time will be at the top
@@ -35,6 +36,7 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
             if(!readyQueue.isEmpty()){
             Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
             System.out.println(p.getName());
+            waitingTime.put(p, time - p.getArrivalTime());
             time += p.getBurstTime(); // add the burst time of the process to the time
             time += contextSwitchTime; // add the context switch time to the time
             }
@@ -44,6 +46,7 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
         }
         while(!readyQueue.isEmpty()){
             Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
+            waitingTime.put(p , time - p.getArrivalTime());
             System.out.println(p.getName());
             time += p.getBurstTime(); // add the burst time of the process to the time
             time += contextSwitchTime; // add the context switch time to the time
@@ -54,69 +57,18 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
     public void getWaitingTime() {
         totalWaitingTime = 0;
         System.out.println("Waiting Time : ");
-        readyQueue.clear(); // clear the ready queue
-        int time = 0;
-        HashMap<String , Integer>added = new HashMap<>(); // to check if the process is already added to the ready queue
-        while(added.size() < processes.size()){
-            for(Process process : processes){
-                if(process.getArrivalTime() <= time && !added.containsKey(process.getName())){
-                    readyQueue.add(process);
-                    added.put(process.getName() , 1);
-                }
-            }
-            if(!readyQueue.isEmpty()) {
-                Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
-                System.out.println(p.getName() + " : " + (time - p.getArrivalTime()));
-                totalWaitingTime += (time - p.getArrivalTime());
-                time += p.getBurstTime(); // add the burst time of the process to the time
-                time += contextSwitchTime; // add the context switch time to the time
-            }
-            else{
-                time++; // if the ready queue is empty , increment the time by 1
-            }
+        for(Process p : processes){
+            System.out.println(p.getName() + " : " + waitingTime.get(p));
         }
-        while(!readyQueue.isEmpty()){
-            Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
-            System.out.println(p.getName() + " : " + (time - p.getArrivalTime()));
-            totalWaitingTime += (time - p.getArrivalTime());
-            time += p.getBurstTime(); // add the burst time of the process to the time
-            time += contextSwitchTime; // add the context switch time to the time
-        }
-
     }
 
     @Override
     public void getTurnAroundTime() {
-        totalTurnAroundTime = 0;
         System.out.println("Turn Around Time : ");
-        readyQueue.clear(); // clear the ready queue
-        int time = 0;
-        HashMap<String , Integer>added = new HashMap<>(); // to check if the process is already added to the ready queue
-        while(added.size() < processes.size()){
-            for(Process process : processes){
-                if(process.getArrivalTime() <= time && !added.containsKey(process.getName())){
-                    readyQueue.add(process);
-                    added.put(process.getName() , 1);
-                }
-            }
-            if(!readyQueue.isEmpty()){
-            Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
-            System.out.println(p.getName() + " : " + (time + p.getBurstTime() - p.getArrivalTime()));
-            totalTurnAroundTime += (time + p.getBurstTime() - p.getArrivalTime());
-            time += p.getBurstTime(); // add the burst time of the process to the time
-            time += contextSwitchTime; // add the context switch time to the time
-            }
-            else{
-                time++;
-            }
+        for(Process p : processes){
+            System.out.println(p.getName() + " : " + waitingTime.get(p) + p.getBurstTime());
         }
-        while(!readyQueue.isEmpty()){
-            Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
-            System.out.println(p.getName() + " : " + (time + p.getBurstTime() - p.getArrivalTime()));
-            totalTurnAroundTime += (time + p.getBurstTime() - p.getArrivalTime());
-            time += p.getBurstTime(); // add the burst time of the process to the time
-            time += contextSwitchTime; // add the context switch time to the time
-        }
+
     }
 
     @Override
