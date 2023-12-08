@@ -47,7 +47,7 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
         waitingTime.clear();
         int time = 0;
         HashMap<String , Integer>added = new HashMap<>();
-        while(added.size()<processes.size()){
+        while(added.size()<processes.size() || !readyQueue.isEmpty()){
             addNewProcesses(time , added);
             if(!readyQueue.isEmpty()){
                 Process p = readyQueue.poll();
@@ -102,23 +102,6 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
             else{
                 time++;
             }
-        }
-        while(!readyQueue.isEmpty()){
-            Process p =  getProcessIfLimit();
-            if(p == null){
-                p = readyQueue.poll();
-            }
-            else{
-                readyQueue.remove(p);
-            }
-            if(waitingTime.containsKey(p))
-                waitingTime.put(p , waitingTime.get(p) + time - p.getArrivalTime());
-            else
-                waitingTime.put(p , time - p.getArrivalTime());
-            System.out.println(p.getName() + " entered cpu at : " + time);
-            time += p.getBurstTime(); // add the burst time of the process to the time
-            time += contextSwitchTime; // add the context switch time to the time
-            updateCurrentWaiting();
         }
     }
 
