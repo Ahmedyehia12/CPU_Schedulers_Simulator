@@ -50,7 +50,9 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
             if(!readyQueue.isEmpty()){
                 Process p = readyQueue.poll();
                 currentWaiting.put(p , 0); // reset the waiting time of the process, as it will enter the cpu
-                System.out.println(p.getName() + " entered cpu at : " + time); // print the name of the process
+                if(getProcessIfLimit() == null){
+                    System.out.println(p.getName() + " entered cpu at : " + time);
+                }
                 int i;
                 for(i = time ; i< time + p.getBurstTime() ; i++){
                     addNewProcesses(i , added);
