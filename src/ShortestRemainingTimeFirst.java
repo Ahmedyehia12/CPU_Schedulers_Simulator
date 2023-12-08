@@ -25,7 +25,7 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
             turnAroundTime.put(p.getName() , p.getBurstTime());
         }
     }
-    public Process getProcess(){
+    public Process getProcessIfLimit(){
         for(Process process : readyQueue){
            if(currentWaiting.containsKey(process) && currentWaiting.get(process) >= limit)
                return process;
@@ -50,17 +50,32 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
         while(added.size()<processes.size()){
             addNewProcesses(time , added);
             if(!readyQueue.isEmpty()){
-                Process p =getProcess();
-                if(p == null){
-                    p = readyQueue.poll();
-                }
-                currentWaiting.put(p , 0); // reset the waiting time of the process
+                Process p = readyQueue.poll();
+                currentWaiting.put(p , 0); // reset the waiting time of the process, as it will enter the cpu
                 System.out.println(p.getName() + " entered cpu at : " + time); // print the name of the process
                 int i;
                 for(i = time ; i<= time + p.getBurstTime() ; i++){
                     addNewProcesses(i , added);
                     if(!readyQueue.isEmpty()){
-                        Process p2 = readyQueue.peek();
+                        Process p2 = getProcessIfLimit();
+                        if(p2 == null){
+                            p2 = readyQueue.peek();
+                        }
+                        else{
+                            currentWaiting.put(p2 , 0);
+                            p.setBurstTime(p.getBurstTime() - (i - time));
+                            if(waitingTime.containsKey(p))
+                                waitingTime.put(p , waitingTime.get(p) + time - p.getArrivalTime());
+                            else
+                                waitingTime.put(p , time - p.getArrivalTime());
+                            p.setArrivalTime(i);
+                            readyQueue.add(p);
+                            p = p2;
+                            time = i;
+                            readyQueue.remove(p2); // remove the process from the ready queue
+                            System.out.println(p.getName() + " entered cpu at : " + i);
+                            continue;
+                        }
                         if(p2.getBurstTime() < p.getBurstTime() - (i - time)){
                             p.setBurstTime(p.getBurstTime() - (i - time));
                             readyQueue.add(p);
@@ -69,7 +84,9 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
                             else
                                 waitingTime.put(p , time - p.getArrivalTime());
                             p.setArrivalTime(i);
+                            currentWaiting.put(p , 0);
                             p = readyQueue.poll();
+                            currentWaiting.put(p , 0);
                             time = i;
                             System.out.println(p.getName() + " entered cpu at : " + i);
                         }
@@ -87,7 +104,13 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
             }
         }
         while(!readyQueue.isEmpty()){
-            Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
+            Process p =  getProcessIfLimit();
+            if(p == null){
+                p = readyQueue.poll();
+            }
+            else{
+                readyQueue.remove(p);
+            }
             if(waitingTime.containsKey(p))
                 waitingTime.put(p , waitingTime.get(p) + time - p.getArrivalTime());
             else
@@ -95,9 +118,8 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
             System.out.println(p.getName() + " entered cpu at : " + time);
             time += p.getBurstTime(); // add the burst time of the process to the time
             time += contextSwitchTime; // add the context switch time to the time
+            updateCurrentWaiting();
         }
-
-
     }
 
     void addNewProcesses(int time , HashMap<String , Integer> added){
@@ -105,6 +127,7 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
             if(process.getArrivalTime() <= time && !added.containsKey(process.getName())){
                 readyQueue.add(process);
                 added.put(process.getName() , 1);
+                currentWaiting.put(process , 0);
             }
         }
     }
