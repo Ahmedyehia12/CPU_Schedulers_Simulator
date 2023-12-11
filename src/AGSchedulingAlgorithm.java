@@ -12,8 +12,11 @@ public class AGSchedulingAlgorithm implements SchedulingAlgorithm {
     HashMap<Process, Integer> lastTime = new HashMap<>();
     HashMap<Process, Integer> oriBurstTime = new HashMap<>();
 
+    GUI gui;
 
-    AGSchedulingAlgorithm(List<Process> processes, int startQuantum) {
+
+    AGSchedulingAlgorithm(List<Process> processes, int startQuantum, GUI gui) {
+        this.gui = gui;
         readyQueue = new LinkedList<>();
         this.processes = processes;
         this.startQuantum = startQuantum;
@@ -90,6 +93,7 @@ public class AGSchedulingAlgorithm implements SchedulingAlgorithm {
                     waitingTime.put(p, startTime - lastTime.get(p));
 
                 lastTime.put(p, time);
+                gui.addLifeBlock(p, startTime, time);
                 if (p.getBurstTime() == 0) {
                     quantum.put(p, 0);
                     p = null;

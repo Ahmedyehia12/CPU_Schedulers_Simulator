@@ -19,12 +19,10 @@ public class Process {
         Random rand = new Random();
         int rf = rand.nextInt(20);
 
-        /*
         if(name == "P1") rf =3;
         else if(name == "P2") rf =8;
         else if(name == "P3") rf =10;
         else if(name == "P4") rf =12;
-         */
 
 
         if(rf < 10){
