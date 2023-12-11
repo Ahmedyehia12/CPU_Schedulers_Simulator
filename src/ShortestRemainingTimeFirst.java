@@ -5,11 +5,12 @@ import java.util.PriorityQueue;
 
 public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same as ShortestJobFirst but preemptive
     private PriorityQueue<Process> readyQueue;
-    private List<Process> processes;
     HashMap<Process , Integer>currentWaiting = new HashMap<>();
     int limit;
+    private List<Process> processes;
     HashMap<String , Integer>turnAroundTime = new HashMap<>();
     HashMap<Process , Integer> waitingTime = new HashMap<>();
+    HashMap<Process , Integer> lastTime = new HashMap<>();
     public ShortestRemainingTimeFirst(List<Process> processes, int limit) {
         readyQueue = new  PriorityQueue<>(processes.size() , new Comparator<Process>() { // min heap , the process with the shortest burst time will be at the top
             @Override
@@ -22,6 +23,10 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
         for(Process p : processes){
             turnAroundTime.put(p.getName() , p.getBurstTime());
         }
+        for(Process p : processes){
+            lastTime.put(p , p.getArrivalTime());
+        }
+
     }
     public Process getProcessIfLimit(){
         for(Process process : readyQueue){
@@ -65,10 +70,10 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
                             currentWaiting.put(p2 , 0);
                             p.setBurstTime(p.getBurstTime() - (i - time));
                             if(waitingTime.containsKey(p))
-                                waitingTime.put(p , waitingTime.get(p) + time - p.getArrivalTime());
+                                waitingTime.put(p , waitingTime.get(p) + time - lastTime.get(p));
                             else
-                                waitingTime.put(p , time - p.getArrivalTime());
-                            p.setArrivalTime(i);
+                                waitingTime.put(p , time - lastTime.get(p));
+                            lastTime.put(p , i);
                             readyQueue.add(p);
                             p = p2;
                             time = i;

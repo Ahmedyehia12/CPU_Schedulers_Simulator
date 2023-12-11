@@ -5,9 +5,9 @@ import java.util.PriorityQueue;
 
 public class PrioritySchedulingAlgorithm implements SchedulingAlgorithm {
     private PriorityQueue<Process> readyQueue;
-    private List<Process> processes;
     int totalWaitingTime = 0;
     int totalTurnAroundTime = 0;
+    private List<Process> processes;
     Map<Process, Integer> startToEnterCPU = new HashMap<>(); // the time when the process entered the CPU
 
     //TODO context switch time
