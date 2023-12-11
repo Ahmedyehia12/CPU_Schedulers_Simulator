@@ -8,9 +8,9 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
     HashMap<Process , Integer>currentWaiting = new HashMap<>();
     int limit;
     private List<Process> processes;
-    HashMap<String , Integer>turnAroundTime = new HashMap<>();
-    HashMap<Process , Integer> waitingTime = new HashMap<>();
-    HashMap<Process , Integer> lastTime = new HashMap<>();
+    private HashMap<String , Integer>originalBurstTime = new HashMap<>();
+    private HashMap<Process , Integer> waitingTime = new HashMap<>();
+    private HashMap<Process , Integer> lastTime = new HashMap<>();
     public ShortestRemainingTimeFirst(List<Process> processes, int limit) {
         readyQueue = new  PriorityQueue<>(processes.size() , new Comparator<Process>() { // min heap , the process with the shortest burst time will be at the top
             @Override
@@ -21,7 +21,7 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
         this.processes = processes;
         this.limit = limit;
         for(Process p : processes){
-            turnAroundTime.put(p.getName() , p.getBurstTime());
+            originalBurstTime.put(p.getName() , p.getBurstTime());
         }
         for(Process p : processes){
             lastTime.put(p , p.getArrivalTime());
@@ -131,7 +131,7 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
     public void getTurnAroundTime() {
         System.out.println("Turn Around Time : ");
         for(Process process : processes){
-            System.out.println(process.getName() + " : " + (waitingTime.get(process) + turnAroundTime.get(process.getName()) + " ms"));
+            System.out.println(process.getName() + " : " + (waitingTime.get(process) + originalBurstTime.get(process.getName()) + " ms"));
         }
     }
 
@@ -148,7 +148,7 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
     public double getAverageTurnAroundTime() {
         double turnAroundTime = 0;
         for(Process process : processes){
-            turnAroundTime += waitingTime.get(process) + this.turnAroundTime.get(process.getName());
+            turnAroundTime += waitingTime.get(process) + this.originalBurstTime.get(process.getName());
         }
         return turnAroundTime/processes.size();
     }
