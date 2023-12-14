@@ -66,6 +66,7 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
                         else{
                             currentWaiting.put(p2 , 0);
                             p.setBurstTime(p.getBurstTime() - (i - time));
+                            gui.addLifeBlock(p , time , i);
                             if(waitingTime.containsKey(p))
                                 waitingTime.put(p , waitingTime.get(p) + time - p.getArrivalTime());
                             else
@@ -81,6 +82,7 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
                         if(p2.getBurstTime() < p.getBurstTime() - (i - time)){
                             p.setBurstTime(p.getBurstTime() - (i - time));
                             readyQueue.add(p);
+                            gui.addLifeBlock(p , time , i);
                             if(waitingTime.containsKey(p))
                                 waitingTime.put(p , waitingTime.get(p) + time - p.getArrivalTime());
                             else
@@ -95,6 +97,7 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
                     }
                     updateCurrentWaiting();
                 }
+                gui.addLifeBlock(p , time , i);
                 if(waitingTime.containsKey(p))
                     waitingTime.put(p , waitingTime.get(p) + time - p.getArrivalTime());
                 else
