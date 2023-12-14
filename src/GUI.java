@@ -84,7 +84,7 @@ public class GUI {
 
 
 
-        int cnt = 0;
+        int cnt = 1;
         for (Process p : processes) {
             JPanel panel = new JPanel();
             model.addRow(new Object[]{cnt++, "  ", p.getName(), p.getId(), p.getPriority()});
@@ -93,7 +93,6 @@ public class GUI {
         }
 
 
-        // Adjust the height of tablePanel based on the number of rows
         int rowHeight = table.getRowHeight();
         int numRows = table.getRowCount();
         int newHeight = Math.min(500, numRows * rowHeight);

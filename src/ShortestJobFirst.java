@@ -24,6 +24,7 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
     }
     @Override
     public void getExecutionOrder() {
+        boolean firstProcess = true;
         System.out.println("Execution Order : ");
         readyQueue.clear();
         int time = 0;
@@ -38,10 +39,10 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
             if(!readyQueue.isEmpty()){
             Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
             System.out.println(p.getName() + " entered cpu at : " + time);
+            time += contextSwitchTime; // add the context switch time to the time
             waitingTime.put(p, time - p.getArrivalTime());
             gui.addLifeBlock(p, time,time + p.getBurstTime());
             time += p.getBurstTime(); // add the burst time of the process to the time
-            time += contextSwitchTime; // add the context switch time to the time
             }
             else{
                 time++; // if the ready queue is empty , increment the time by 1

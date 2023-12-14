@@ -4,24 +4,25 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) {
         List<Process> processes = new ArrayList<>();
+        int contextSwitchTime = 1;
         int maxTime = 0;
-        processes.add(new Process("P1", "RED", 3, 3, 4));
-        processes.add(new Process("P2", "BLUE", 3, 2, 9));
-        processes.add(new Process("P3", "YELLOW", 4, 1, 2));
-        processes.add(new Process("P4", "CYAN", 10, 4, 8));
-        processes.add(new Process("P5", "GREEN", 12, 4, 8));
-        processes.add(new Process("P6", "PINK", 12, 4, 8));
-        processes.add(new Process("P7", "BLACK", 13, 4, 8));
+        processes.add(new Process("P1", "RED", 0, 10, 4));
+        processes.add(new Process("P2", "BLUE", 0, 29, 9));
+        processes.add(new Process("P3", "YELLOW", 0, 3, 2));
+        processes.add(new Process("P4", "CYAN", 0, 7, 8));
+        processes.add(new Process("P5", "GREEN", 0, 12, 8));
 
-        maxTime = 50;
-        // for(int i = 0; i < 20; i++){
-        //     processes.add(new Process("P" + (i + 5), "RED", i, 17, 4));
-        //     maxTime += 17;
-        // }
+        // to calculate the max time for the Gannt chart to be displayed
+        for (Process process : processes) {
+            maxTime += process.getBurstTime()+contextSwitchTime;
+        }
+
+
+
 
         GUI gui = new GUI(processes, maxTime);
 
-        SchedulingAlgorithm sjf = new PrioritySchedulingAlgorithm(processes,  gui);
+        SchedulingAlgorithm sjf = new ShortestRemainingTimeFirst(processes,contextSwitchTime,  gui);
         sjf.getExecutionOrder();
         sjf.getWaitingTime();
         sjf.getTurnAroundTime();
