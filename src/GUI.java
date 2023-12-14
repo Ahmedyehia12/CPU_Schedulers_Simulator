@@ -11,13 +11,18 @@ public class GUI {
     JPanel bottomLeftPanel, bottomRightPanel, tablePanel;
     JScrollPane scrollPane;
 
-    HashMap<Process, Integer> processIndex;
+    HashMap<Process, Integer> priority;
    static List<Process> processes;
     JPanel rightPanel = new JPanel();
 
 
     public GUI(List<Process> processes, int maxTime) {
+
         this.processes = processes;
+        priority = new HashMap<>();
+        for (Process p: processes){
+            priority.put(p, p.getPriority());
+        }
         frame = new JFrame("CPU Scheduling Algorithms");
         topPanel = new GanntChart(processes, maxTime);
 
@@ -87,7 +92,7 @@ public class GUI {
         int cnt = 1;
         for (Process p : processes) {
             JPanel panel = new JPanel();
-            model.addRow(new Object[]{cnt++, "  ", p.getName(), p.getId(), p.getPriority()});
+            model.addRow(new Object[]{cnt++, "  ", p.getName(), p.getId(), priority.get(p)});
             panel.setPreferredSize(new Dimension(1, 1));
 
         }
