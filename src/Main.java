@@ -17,7 +17,7 @@ public class Main {
 
         GUI gui = new GUI(processes, maxTime);
 
-        SchedulingAlgorithm sjf = new AGSchedulingAlgorithm(processes, 4, gui);
+        SchedulingAlgorithm sjf = new ShortestJobFirst(processes,  5,gui);
         sjf.getExecutionOrder();
         sjf.getWaitingTime();
         sjf.getTurnAroundTime();

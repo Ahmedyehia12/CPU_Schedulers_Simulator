@@ -9,9 +9,11 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
     public int totalWaitingTime = 0;
     public int contextSwitchTime;
     public int totalTurnAroundTime = 0;
+    GUI gui;
     HashMap<Process , Integer>waitingTime = new HashMap<>();
-    public ShortestJobFirst(List<Process> processes, int contextSwitchTime) {
+    public ShortestJobFirst(List<Process> processes, int contextSwitchTime, GUI gui) {
         this.contextSwitchTime = contextSwitchTime;
+        this.gui = gui;
        readyQueue = new  PriorityQueue<>(processes.size() , new Comparator<Process>() { // min heap , the process with the shortest burst time will be at the top
            @Override
            public int compare(Process o1, Process o2) {
@@ -37,6 +39,7 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
             Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
             System.out.println(p.getName() + " entered cpu at : " + time);
             waitingTime.put(p, time - p.getArrivalTime());
+            gui.addLifeBlock(p, time,time + p.getBurstTime());
             time += p.getBurstTime(); // add the burst time of the process to the time
             time += contextSwitchTime; // add the context switch time to the time
             }
@@ -47,6 +50,7 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
         while(!readyQueue.isEmpty()){
             Process p = readyQueue.poll(); // poll: returns the head of the queue and removes it
             waitingTime.put(p , time - p.getArrivalTime());
+            gui.addLifeBlock(p, time,time + p.getBurstTime());
             System.out.println(p.getName() + " entered cpu at : " + time);
             time += p.getBurstTime(); // add the burst time of the process to the time
             time += contextSwitchTime; // add the context switch time to the time
@@ -59,6 +63,7 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
         System.out.println("Waiting Time : ");
         for(Process p : processes){
             System.out.println(p.getName() + " : " + waitingTime.get(p));
+            totalWaitingTime += waitingTime.get(p);
         }
     }
 
@@ -66,7 +71,8 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
     public void getTurnAroundTime() {
         System.out.println("Turn Around Time : ");
         for(Process p : processes){
-            System.out.println(p.getName() + " : " + waitingTime.get(p) + p.getBurstTime());
+            System.out.println(p.getName() + " : " +( waitingTime.get(p) + p.getBurstTime()));
+            totalTurnAroundTime += waitingTime.get(p) + p.getBurstTime();
         }
 
     }

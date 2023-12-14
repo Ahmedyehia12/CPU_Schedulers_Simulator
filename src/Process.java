@@ -7,6 +7,12 @@ public class Process {
     private int burstTime;
     private int priority;
     private int AGFactor;
+    static private int idCounter=0;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
 
 
 
@@ -18,6 +24,7 @@ public class Process {
         this.priority = priority;
         Random rand = new Random();
         int rf = rand.nextInt(20);
+        id = idCounter++;
 
         if(name == "P1") rf =3;
         else if(name == "P2") rf =8;

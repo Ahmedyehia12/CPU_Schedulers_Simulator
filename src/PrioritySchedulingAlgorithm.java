@@ -10,12 +10,13 @@ public class PrioritySchedulingAlgorithm implements SchedulingAlgorithm {
     int totalTurnAroundTime = 0;
     Map<Process, Integer> startToEnterCPU = new HashMap<>(); // the time when the process entered the CPU
 
-    //TODO context switch time
+    GUI gui;
 
-    PrioritySchedulingAlgorithm(List<Process> processes) {
+    PrioritySchedulingAlgorithm(List<Process> processes, GUI gui) {
         // min heap , the process with the shortest burst time will be at the top
         readyQueue = new PriorityQueue<>((o1, o2) -> Integer.compare(o1.getPriority(), o2.getPriority()));
         this.processes = processes;
+        this.gui = gui;
     }
 
     void addNewProcesses(int time, Map<String, Integer> added) {
@@ -43,24 +44,20 @@ public class PrioritySchedulingAlgorithm implements SchedulingAlgorithm {
         System.out.println("Execution Order : ");
 
         HashMap<String, Integer> added = new HashMap<>(); // to check if the process is already added to the ready queue
-        while (processes.size() != added.size()) {
+        while (processes.size() != added.size() || !readyQueue.isEmpty()) {
             decreasePriority(time);
             addNewProcesses(time, added);
             if (!readyQueue.isEmpty()) {
                 Process p = readyQueue.poll();
                 System.out.println(p.getName() + " Entered the CPU at " + time);
                 startToEnterCPU.put(p, time);
+                gui.addLifeBlock(p, time,time + p.getBurstTime());
+
                 time += p.getBurstTime();
             } else {
                 time++;
             }
 
-        }
-        while (!readyQueue.isEmpty()) {
-            Process p = readyQueue.poll();
-            System.out.println(p.getName() + " Entered the CPU at " + time);
-            startToEnterCPU.put(p, time);
-            time += p.getBurstTime();
         }
 
         System.out.println("\n_________________________________________________________________\n");
