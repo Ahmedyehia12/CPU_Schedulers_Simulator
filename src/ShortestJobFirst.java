@@ -60,12 +60,16 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
 
     @Override
     public void getWaitingTime() {
+        System.out.println("\n_________________________________________________________________\n");
+
         totalWaitingTime = 0;
         System.out.println("Waiting Time : ");
         for(Process p : processes){
             System.out.println(p.getName() + " : " + waitingTime.get(p));
             totalWaitingTime += waitingTime.get(p);
         }
+        System.out.println("\n_________________________________________________________________\n");
+
     }
 
     @Override
@@ -75,6 +79,8 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
             System.out.println(p.getName() + " : " +( waitingTime.get(p) + p.getBurstTime()));
             totalTurnAroundTime += waitingTime.get(p) + p.getBurstTime();
         }
+        System.out.println("\n_________________________________________________________________\n");
+
 
     }
 

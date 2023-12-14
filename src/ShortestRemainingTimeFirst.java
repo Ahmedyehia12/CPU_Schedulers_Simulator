@@ -121,10 +121,14 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
     }
     @Override
     public void getWaitingTime() {
+        System.out.println("\n_________________________________________________________________\n");
+
         System.out.println("Waiting Time : ");
         for(Process process : processes){
             System.out.println(process.getName() + " : " + waitingTime.get(process) + " ms");
         }
+        System.out.println("\n_________________________________________________________________\n");
+
     }
 
     @Override
@@ -133,6 +137,8 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
         for(Process process : processes){
             System.out.println(process.getName() + " : " + (waitingTime.get(process) + turnAroundTime.get(process.getName()) + " ms"));
         }
+        System.out.println("\n_________________________________________________________________\n");
+
     }
 
     @Override
