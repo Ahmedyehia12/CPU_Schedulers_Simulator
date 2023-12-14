@@ -10,10 +10,9 @@ public class GUI {
     GanntChart topPanel;
     JPanel bottomLeftPanel, bottomRightPanel, tablePanel;
     JScrollPane scrollPane;
-    DefaultTableCellRenderer cellRenderer;
 
     HashMap<Process, Integer> processIndex;
-    List<Process> processes;
+   static List<Process> processes;
     JPanel rightPanel = new JPanel();
 
 
@@ -81,13 +80,9 @@ public class GUI {
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(model);
         table.setFillsViewportHeight(true);
-        cellRenderer = new DefaultTableCellRenderer();
-        cellRenderer.setHorizontalAlignment(JLabel.CENTER);
 
 
-        for (int i = 0; i < table.getColumnCount(); i++) {
-            table.getColumnModel().getColumn(i).setCellRenderer(cellRenderer);
-        }
+
 
         int cnt = 0;
         for (Process p : processes) {
@@ -103,27 +98,21 @@ public class GUI {
         int numRows = table.getRowCount();
         int newHeight = Math.min(500, numRows * rowHeight);
         tablePanel.setPreferredSize(new Dimension(500, newHeight));
-        for (int i = 0; i < table.getColumnCount(); i++) {
-//            table.setValueAt(new ColoredCellData("Data", Color.GREEN), 1, 2);
+//        for (int i = 0; i < table.getColumnCount(); i++) {
+            table.getColumnModel().getColumn(1).setCellRenderer( new ColoredTableCellRenderer());
 
-        }
+//        }
         tablePanel.add(table.getTableHeader());
 
         tablePanel.add(table);
 
     }
+
+
 }
 
 class ColoredTableCellRenderer extends DefaultTableCellRenderer {
-    private int targetRow;
-    private int targetColumn;
-    private Color targetColor;
 
-    public ColoredTableCellRenderer(int targetRow, int targetColumn, Color targetColor) {
-        this.targetRow = targetRow;
-        this.targetColumn = targetColumn;
-        this.targetColor = targetColor;
-    }
 
     @Override
     public Component getTableCellRendererComponent(
@@ -133,9 +122,8 @@ class ColoredTableCellRenderer extends DefaultTableCellRenderer {
         Component renderer = super.getTableCellRendererComponent(
                 table, value, isSelected, hasFocus, row, column);
 
-        if (row == targetRow && column == targetColumn) {
-            renderer.setBackground(targetColor);
-        }
+            renderer.setBackground(GanntChart.processColor.get(GUI.processes.get(row).getColor()));
+
         return renderer;
     }
 };
