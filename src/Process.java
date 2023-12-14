@@ -7,7 +7,7 @@ public class Process {
     private int burstTime;
     private int priority;
     private int AGFactor;
-    static private int idCounter=0;
+    static private int idCounter=2023;
     private int id;
 
     public int getId() {

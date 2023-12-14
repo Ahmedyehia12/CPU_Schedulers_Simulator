@@ -13,7 +13,7 @@ import javax.swing.border.LineBorder;
 
 public class GanntChart extends JPanel {
     HashMap<Process, Integer> processIndex;
-    HashMap<String, Color> processColor;
+   static HashMap<String, Color> processColor;
     List<List<JPanel>> matrix;
 
     public GanntChart(List<Process> processes, int maxTime) {
