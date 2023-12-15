@@ -1,0 +1,166 @@
+Shortest Job First Scheduling Algorithm
+Execution Order : 
+P1 entered cpu at : 1
+P2 entered cpu at : 19
+P3 entered cpu at : 26
+P4 entered cpu at : 37
+
+_________________________________________________________________
+
+Waiting Time : 
+P1 : 1
+P2 : 16
+P3 : 22
+P4 : 8
+
+_________________________________________________________________
+
+Turn Around Time : 
+P1 : 18
+P2 : 22
+P3 : 32
+P4 : 12
+
+_________________________________________________________________
+
+Average Waiting Time : 11.75 ms
+Average Turn Around Time : 21.0 ms
+
+_________________________________________________________________
+
+Shortest Remaining Time Scheduling Algorithm
+Execution Order : 
+P1 entered cpu at : 0
+P2 entered cpu at : 3
+P1 entered cpu at : 4
+P2 entered cpu at : 5
+P3 entered cpu at : 6
+P1 entered cpu at : 7
+P2 entered cpu at : 8
+P3 entered cpu at : 9
+P1 entered cpu at : 10
+P2 entered cpu at : 11
+P3 entered cpu at : 12
+P1 entered cpu at : 13
+P2 entered cpu at : 14
+P3 entered cpu at : 15
+P1 entered cpu at : 16
+P2 entered cpu at : 17
+P1 entered cpu at : 18
+P3 entered cpu at : 19
+P1 entered cpu at : 20
+P3 entered cpu at : 21
+P1 entered cpu at : 22
+P3 entered cpu at : 23
+P1 entered cpu at : 24
+P3 entered cpu at : 25
+P1 entered cpu at : 26
+P3 entered cpu at : 27
+P1 entered cpu at : 28
+P3 entered cpu at : 29
+P4 entered cpu at : 30
+P1 entered cpu at : 32
+P4 entered cpu at : 34
+P1 entered cpu at : 36
+
+_________________________________________________________________
+
+Waiting Time : 
+P1 : 20 ms
+P2 : 9 ms
+P3 : 16 ms
+P4 : 3 ms
+
+_________________________________________________________________
+
+Turn Around Time : 
+P1 : 37 ms
+P2 : 15 ms
+P3 : 26 ms
+P4 : 7 ms
+
+_________________________________________________________________
+
+Average Waiting Time : 12.0 ms
+Average Turn Around Time : 21.25 ms
+
+_________________________________________________________________
+
+Priority Scheduling Algorithm
+Execution Order : 
+P1 Entered the CPU at 0
+P3 Entered the CPU at 17
+P2 Entered the CPU at 27
+P4 Entered the CPU at 33
+
+_________________________________________________________________
+
+Waiting Time : 
+Waiting Time for  P1 : 0
+Waiting Time for  P2 : 24
+Waiting Time for  P3 : 13
+Waiting Time for  P4 : 4
+
+_________________________________________________________________
+
+Turn Around Time : 
+Turn Around Time for P1 : 17
+Turn Around Time for P2 : 30
+Turn Around Time for P3 : 23
+Turn Around Time for P4 : 8
+
+_________________________________________________________________
+
+Average Waiting Time : 10.0 ms
+Average Turn Around Time : 19.0 ms
+
+_________________________________________________________________
+
+AG-Scheduling Algorithm
+Execution Order : 
+Quantum: P2: 4, P3: 4, P1: 4, P4: 4.
+P1 Entered the CPU at 0
+Quantum: P2: 4, P3: 4, P1: 5, P4: 4.
+P2 Entered the CPU at 3
+Quantum: P2: 5, P3: 4, P1: 5, P4: 4.
+P1 Entered the CPU at 7
+Quantum: P2: 5, P3: 4, P1: 7, P4: 4.
+P2 Entered the CPU at 10
+Quantum: P2: 0, P3: 4, P1: 7, P4: 4.
+P3 Entered the CPU at 12
+Quantum: P2: 0, P3: 6, P1: 7, P4: 4.
+P1 Entered the CPU at 14
+Quantum: P2: 0, P3: 6, P1: 8, P4: 4.
+P3 Entered the CPU at 21
+Quantum: P2: 0, P3: 9, P1: 8, P4: 4.
+P1 Entered the CPU at 24
+Quantum: P2: 0, P3: 9, P1: 0, P4: 4.
+P3 Entered the CPU at 28
+Quantum: P2: 0, P3: 0, P1: 0, P4: 4.
+P4 Entered the CPU at 33
+Quantum: P2: 0, P3: 0, P1: 0, P4: 0.
+Processes finished at: 37
+
+_________________________________________________________________
+
+Waiting Time : 
+P1 11
+P2 3
+P3 19
+P4 4
+
+_________________________________________________________________
+
+Turn Around Time : 
+P1 28
+P2 9
+P3 29
+P4 8
+
+_________________________________________________________________
+
+Average Waiting Time : 9.25 ms
+Average Turn Around Time : 18.5 ms
+
+_________________________________________________________________
+

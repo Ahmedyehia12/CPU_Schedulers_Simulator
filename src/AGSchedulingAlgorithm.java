@@ -14,14 +14,17 @@ public class AGSchedulingAlgorithm implements SchedulingAlgorithm {
 
     GUI gui;
 
-
     AGSchedulingAlgorithm(List<Process> processes, int startQuantum, GUI gui) {
         this.gui = gui;
         readyQueue = new LinkedList<>();
-        this.processes = processes;
+        this.processes = new ArrayList<>();
+        for (Process p : processes)
+            this.processes.add(new Process(p));
+        
         this.startQuantum = startQuantum;
-        for (Process p : processes) {
+        for (Process p : this.processes) {
             oriBurstTime.put(p, p.getBurstTime());
+            quantum.put(p, startQuantum);
         }
     }
 
@@ -30,7 +33,6 @@ public class AGSchedulingAlgorithm implements SchedulingAlgorithm {
             if (process.getArrivalTime() <= time && !added.containsKey(process.getName())) {
                 readyQueue.add(process);
                 added.put(process.getName(), 1);
-                quantum.put(process, startQuantum);
                 lastTime.put(process, process.getArrivalTime());
             }
         }
@@ -58,13 +60,11 @@ public class AGSchedulingAlgorithm implements SchedulingAlgorithm {
         return (int) Math.ceil(mean);
     }
 
-
     @Override
     public void getExecutionOrder() {
         int time = 0;
         readyQueue.clear();
         startToEnterCPU.clear();
-        quantum.clear();
         System.out.println("Execution Order : ");
 
         HashMap<String, Integer> added = new HashMap<>();// to check if the process is already added to the ready queue
@@ -74,6 +74,14 @@ public class AGSchedulingAlgorithm implements SchedulingAlgorithm {
             if (!readyQueue.isEmpty()) {
                 if (p == null)
                     p = readyQueue.poll();
+
+                System.out.print("Quantum:");
+                int i = 0;
+                for (Process tmp : quantum.keySet())
+                    System.out.print(
+                            " " + tmp.getName() + ": " + quantum.get(tmp) + ",.".charAt(++i == quantum.size() ? 1 : 0));
+                System.out.println();
+
                 System.out.println(p.getName() + " Entered the CPU at " + time);
                 startToEnterCPU.put(p, time);
                 int startTime = time;
@@ -81,7 +89,9 @@ public class AGSchedulingAlgorithm implements SchedulingAlgorithm {
                 time += reqTime;
                 p.reduceBurstTime(reqTime);
                 addNewProcesses(time, added);
-                while (time - startTime < quantum.get(p) && (readyQueue.isEmpty() || p.getAGFactor() <= minAGFactor().getAGFactor()) && p.getBurstTime() > 0) {
+                while (time - startTime < quantum.get(p)
+                        && (readyQueue.isEmpty() || p.getAGFactor() <= minAGFactor().getAGFactor())
+                        && p.getBurstTime() > 0) {
                     time++;
                     p.reduceBurstTime(1);
                     addNewProcesses(time, added);
@@ -115,6 +125,12 @@ public class AGSchedulingAlgorithm implements SchedulingAlgorithm {
             }
 
         }
+        System.out.print("Quantum:");
+        int i = 0;
+        for (Process tmp : quantum.keySet())
+            System.out
+                    .print(" " + tmp.getName() + ": " + quantum.get(tmp) + ",.".charAt(++i == quantum.size() ? 1 : 0));
+        System.out.println();
         System.out.println("Processes finished at: " + time);
         System.out.println("\n_________________________________________________________________\n");
     }

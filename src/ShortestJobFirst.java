@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +21,9 @@ public class ShortestJobFirst implements SchedulingAlgorithm{
                return o1.getBurstTime() - o2.getBurstTime();
            }
        });
-       this.processes = processes;
+       this.processes = new ArrayList<>();
+       for (Process p : processes)
+           this.processes.add(new Process(p));
     }
     @Override
     public void getExecutionOrder() {

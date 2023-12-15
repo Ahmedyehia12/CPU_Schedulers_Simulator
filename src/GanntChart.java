@@ -7,10 +7,9 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-
 public class GanntChart extends JPanel {
-    HashMap<Process, Integer> processIndex;
-   static HashMap<String, Color> processColor;
+    HashMap<String, Integer> processIndex;
+    static HashMap<String, Color> processColor;
     List<List<JPanel>> matrix;
 
     public GanntChart(List<Process> processes, int maxTime) {
@@ -18,14 +17,12 @@ public class GanntChart extends JPanel {
         processIndex = new HashMap<>();
         matrix = new ArrayList<List<JPanel>>();
 
-        
         GridLayout layout = new GridLayout(processes.size() + 1, maxTime + 1);
         this.setLayout(layout);
         this.setBounds(0, 0, 50 * (maxTime), 30 * (processes.size()));
         this.setPreferredSize(new Dimension(50 * (maxTime), 30 * (processes.size())));
         this.setSize(getPreferredSize());
 
-        
         JPanel panel = new JPanel();
         JLabel label = new JLabel("Process");
         panel.add(label);
@@ -33,7 +30,7 @@ public class GanntChart extends JPanel {
         List<JPanel> row = new ArrayList<JPanel>();
         row.add(panel);
 
-        for(int i = 0; i <= maxTime; i++) {
+        for (int i = 0; i <= maxTime; i++) {
             panel = new JPanel();
             label = new JLabel(Integer.toString(i));
             panel.setPreferredSize(new Dimension(panel.getPreferredSize().width, 20));
@@ -60,7 +57,7 @@ public class GanntChart extends JPanel {
     public void addProcesses(List<Process> processes, int maxTime) {
         int i = 0;
         for (Process process : processes) {
-            processIndex.put(process, i++);
+            processIndex.put(process.getName(), i++);
             JPanel panel = new JPanel();
             JLabel label = new JLabel(process.getName());
             panel.add(label);
@@ -74,6 +71,7 @@ public class GanntChart extends JPanel {
             matrix.add(row);
         }
     }
+
     public void show() {
         for (List<JPanel> row : matrix) {
             for (JPanel panel : row) {
@@ -81,11 +79,12 @@ public class GanntChart extends JPanel {
             }
         }
     }
-    public void addLifeBlock(Process process, int start, int end) {
-        int index = processIndex.get(process);
+
+    public void addLifeBlock(String pName, int start, int end) {
+        int index = processIndex.get(pName);
         for (int i = start; i < end; i++) {
             JPanel panel = matrix.get(index + 1).get(i + 1);
-            panel.setBackground(processColor.get(process.getColor()));
+            panel.setBackground(processColor.get(GUI.processes.get(index).getColor()));
         }
     }
 }

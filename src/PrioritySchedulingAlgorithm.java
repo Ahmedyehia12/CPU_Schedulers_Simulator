@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,9 @@ public class PrioritySchedulingAlgorithm implements SchedulingAlgorithm {
     PrioritySchedulingAlgorithm(List<Process> processes, GUI gui) {
         // min heap , the process with the shortest burst time will be at the top
         readyQueue = new PriorityQueue<>((o1, o2) -> Integer.compare(o1.getPriority(), o2.getPriority()));
-        this.processes = processes;
+        this.processes = new ArrayList<>();
+        for (Process p : processes)
+            this.processes.add(new Process(p));
         this.gui = gui;
     }
 

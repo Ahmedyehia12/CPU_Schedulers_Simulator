@@ -10,17 +10,17 @@ public class GUI {
     GanntChart topPanel;
     JPanel bottomLeftPanel, bottomRightPanel, tablePanel;
     JScrollPane scrollPane;
+    String algorithmName;
 
     HashMap<Process, Integer> priority;
-   static List<Process> processes;
+    static List<Process> processes;
     JPanel rightPanel = new JPanel();
 
-
-    public GUI(List<Process> processes, int maxTime) {
-
+    public GUI(List<Process> processes, int maxTime, String algorithmName) {
+        this.algorithmName = algorithmName;
         this.processes = processes;
         priority = new HashMap<>();
-        for (Process p: processes){
+        for (Process p : processes) {
             priority.put(p, p.getPriority());
         }
         frame = new JFrame("CPU Scheduling Algorithms");
@@ -50,13 +50,11 @@ public class GUI {
 
         frame.getContentPane().setLayout(new BorderLayout());
 
-
         frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-
 
         frame.getContentPane().add(bottomLeftPanel, BorderLayout.SOUTH);
 
-        rightPanel.setLayout(new GridLayout(2, 1));
+        rightPanel.setLayout(new GridLayout(1, 1));
         rightPanel.add(tablePanel);
         rightPanel.setBackground(Color.gray);
 
@@ -72,51 +70,46 @@ public class GUI {
     }
 
     public void addLifeBlock(Process p, int start, int end) {
-        topPanel.addLifeBlock(p, start, end);
+        topPanel.addLifeBlock(p.getName(), start, end);
     }
 
     public void addStats(double awt, double att) {
         bottomLeftPanel.add(new JLabel(
-                "<html>Average Waiting Time : " + awt + "<br/>Average Turn Around Time : " + att + "</html>"));
+                "<html>" + algorithmName + "<br/>Average Waiting Time : " + awt + "<br/>Average Turn Around Time : "
+                        + att + "</html>"));
     }
 
     public void addProcessesInfo() {
-        String[] columnNames = {"Process", "Color", "Name", "PID", "Priority"};
+        String[] columnNames = { "Process", "Color", "Name", "PID", "Priority" };
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(model);
         table.setFillsViewportHeight(true);
 
-
-
-
         int cnt = 1;
         for (Process p : processes) {
             JPanel panel = new JPanel();
-            model.addRow(new Object[]{cnt++, "  ", p.getName(), p.getId(), priority.get(p)});
+            model.addRow(new Object[] { cnt++, "  ", p.getName(), p.getId(), priority.get(p) });
             panel.setPreferredSize(new Dimension(1, 1));
 
         }
-
 
         int rowHeight = table.getRowHeight();
         int numRows = table.getRowCount();
         int newHeight = Math.min(500, numRows * rowHeight);
         tablePanel.setPreferredSize(new Dimension(500, newHeight));
-//        for (int i = 0; i < table.getColumnCount(); i++) {
-            table.getColumnModel().getColumn(1).setCellRenderer( new ColoredTableCellRenderer());
+        // for (int i = 0; i < table.getColumnCount(); i++) {
+        table.getColumnModel().getColumn(1).setCellRenderer(new ColoredTableCellRenderer());
 
-//        }
+        // }
         tablePanel.add(table.getTableHeader());
 
         tablePanel.add(table);
 
     }
 
-
 }
 
 class ColoredTableCellRenderer extends DefaultTableCellRenderer {
-
 
     @Override
     public Component getTableCellRendererComponent(
@@ -126,7 +119,7 @@ class ColoredTableCellRenderer extends DefaultTableCellRenderer {
         Component renderer = super.getTableCellRendererComponent(
                 table, value, isSelected, hasFocus, row, column);
 
-            renderer.setBackground(GanntChart.processColor.get(GUI.processes.get(row).getColor()));
+        renderer.setBackground(GanntChart.processColor.get(GUI.processes.get(row).getColor()));
 
         return renderer;
     }
