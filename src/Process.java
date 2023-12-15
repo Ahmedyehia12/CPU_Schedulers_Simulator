@@ -7,6 +7,22 @@ public class Process {
     private int burstTime;
     private int priority;
     private int AGFactor;
+    static private int idCounter=2023;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public Process(Process p){
+        this.name = p.name;
+        this.color = p.color;
+        this.arrivalTime = p.arrivalTime;
+        this.burstTime = p.burstTime;
+        this.priority = p.priority;
+        this.AGFactor = p.AGFactor;
+        this.id = p.id;
+    }
 
 
     public Process(String name, String color, int arrivalTime, int burstTime, int priority) {
@@ -17,6 +33,14 @@ public class Process {
         this.priority = priority;
         Random rand = new Random();
         int rf = rand.nextInt(20);
+        id = idCounter++;
+
+        // if(name == "P1") rf =3;
+        // else if(name == "P2") rf =8;
+        // else if(name == "P3") rf =10;
+        // else if(name == "P4") rf =12;
+
+
         if(rf < 10){
             AGFactor = rf + arrivalTime + burstTime;
         }
@@ -27,6 +51,7 @@ public class Process {
             AGFactor = 10 + arrivalTime + burstTime;
         }
     }
+
     public int getArrivalTime(){
         return arrivalTime;
     }
@@ -42,7 +67,7 @@ public class Process {
     public int getPriority(){
         return priority;
     }
-    public void setPriority(int priority){;
+    public void setPriority(int priority){
         this.priority = priority;
     }
     public String getName(){
@@ -63,4 +88,6 @@ public class Process {
     public void setAGFactor(int AGFactor){
         this.AGFactor = AGFactor;
     }
+    public void reduceBurstTime(int val){ this.burstTime -= val ;}
+
 }

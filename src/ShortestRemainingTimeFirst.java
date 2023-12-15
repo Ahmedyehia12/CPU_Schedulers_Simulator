@@ -1,3 +1,5 @@
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -5,28 +7,27 @@ import java.util.PriorityQueue;
 
 public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same as ShortestJobFirst but preemptive
     private PriorityQueue<Process> readyQueue;
+    private List<Process> processes;
     HashMap<Process , Integer>currentWaiting = new HashMap<>();
     int limit;
-    private List<Process> processes;
-    private HashMap<String , Integer>originalBurstTime = new HashMap<>();
-    private HashMap<Process , Integer> waitingTime = new HashMap<>();
-    private HashMap<Process , Integer> lastTime = new HashMap<>();
-    public ShortestRemainingTimeFirst(List<Process> processes, int limit) {
+    HashMap<String , Integer>turnAroundTime = new HashMap<>();
+    HashMap<Process , Integer> waitingTime = new HashMap<>();
+    GUI gui;
+    public ShortestRemainingTimeFirst(List<Process> processes, int limit, GUI gui) {
+        this.gui = gui;
         readyQueue = new  PriorityQueue<>(processes.size() , new Comparator<Process>() { // min heap , the process with the shortest burst time will be at the top
             @Override
             public int compare(Process o1, Process o2) {
                 return o1.getBurstTime() - o2.getBurstTime();
             }
         });
-        this.processes = processes;
+        this.processes = new ArrayList<>();
+        for (Process p : processes)
+            this.processes.add(new Process(p));
         this.limit = limit;
         for(Process p : processes){
-            originalBurstTime.put(p.getName() , p.getBurstTime());
+            turnAroundTime.put(p.getName() , p.getBurstTime());
         }
-        for(Process p : processes){
-            lastTime.put(p , p.getArrivalTime());
-        }
-
     }
     public Process getProcessIfLimit(){
         for(Process process : readyQueue){
@@ -69,11 +70,12 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
                         else{
                             currentWaiting.put(p2 , 0);
                             p.setBurstTime(p.getBurstTime() - (i - time));
+                            gui.addLifeBlock(p , time , i);
                             if(waitingTime.containsKey(p))
-                                waitingTime.put(p , waitingTime.get(p) + time - lastTime.get(p));
+                                waitingTime.put(p , waitingTime.get(p) + time - p.getArrivalTime());
                             else
-                                waitingTime.put(p , time - lastTime.get(p));
-                            lastTime.put(p , i);
+                                waitingTime.put(p , time - p.getArrivalTime());
+                            p.setArrivalTime(i);
                             readyQueue.add(p);
                             p = p2;
                             time = i;
@@ -84,6 +86,7 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
                         if(p2.getBurstTime() < p.getBurstTime() - (i - time)){
                             p.setBurstTime(p.getBurstTime() - (i - time));
                             readyQueue.add(p);
+                            gui.addLifeBlock(p , time , i);
                             if(waitingTime.containsKey(p))
                                 waitingTime.put(p , waitingTime.get(p) + time - p.getArrivalTime());
                             else
@@ -98,6 +101,7 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
                     }
                     updateCurrentWaiting();
                 }
+                gui.addLifeBlock(p , time , i);
                 if(waitingTime.containsKey(p))
                     waitingTime.put(p , waitingTime.get(p) + time - p.getArrivalTime());
                 else
@@ -121,18 +125,24 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
     }
     @Override
     public void getWaitingTime() {
+        System.out.println("\n_________________________________________________________________\n");
+
         System.out.println("Waiting Time : ");
         for(Process process : processes){
             System.out.println(process.getName() + " : " + waitingTime.get(process) + " ms");
         }
+        System.out.println("\n_________________________________________________________________\n");
+
     }
 
     @Override
     public void getTurnAroundTime() {
         System.out.println("Turn Around Time : ");
         for(Process process : processes){
-            System.out.println(process.getName() + " : " + (waitingTime.get(process) + originalBurstTime.get(process.getName()) + " ms"));
+            System.out.println(process.getName() + " : " + (waitingTime.get(process) + turnAroundTime.get(process.getName()) + " ms"));
         }
+        System.out.println("\n_________________________________________________________________\n");
+
     }
 
     @Override
@@ -148,7 +158,7 @@ public class ShortestRemainingTimeFirst implements SchedulingAlgorithm{ // same 
     public double getAverageTurnAroundTime() {
         double turnAroundTime = 0;
         for(Process process : processes){
-            turnAroundTime += waitingTime.get(process) + this.originalBurstTime.get(process.getName());
+            turnAroundTime += waitingTime.get(process) + this.turnAroundTime.get(process.getName());
         }
         return turnAroundTime/processes.size();
     }
