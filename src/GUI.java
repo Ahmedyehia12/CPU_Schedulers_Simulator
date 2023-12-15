@@ -23,7 +23,7 @@ public class GUI {
         for (Process p : processes) {
             priority.put(p, p.getPriority());
         }
-        frame = new JFrame("CPU Scheduling Algorithms");
+        frame = new JFrame(algorithmName);
         topPanel = new GanntChart(processes, maxTime);
 
         scrollPane = new JScrollPane(topPanel);
