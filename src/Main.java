@@ -67,7 +67,7 @@ public class Main {
         SJFgui.addStats(sjf.getAverageWaitingTime(), sjf.getAverageTurnAroundTime());
         SJFgui.show();
 
-        SchedulingAlgorithm srt = new ShortestRemainingTimeFirst(processes, contextSwitchTime, SRTgui);
+        SchedulingAlgorithm srt = new ShortestRemainingTimeFirst(processes, 10, SRTgui);
         System.out.println("Shortest Remaining Time Scheduling Algorithm");
         srt.getExecutionOrder();
         srt.getWaitingTime();
