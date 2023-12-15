@@ -47,7 +47,7 @@ public class Main {
 
         // to calculate the max time for the Gannt chart to be displayed
         for (Process process : processes) {
-            maxTime += process.getBurstTime() + contextSwitchTime;
+            maxTime += process.getBurstTime() + contextSwitchTime + process.getArrivalTime();
         }
         
         
