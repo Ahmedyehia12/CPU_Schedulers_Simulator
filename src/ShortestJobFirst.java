@@ -6,8 +6,8 @@ import java.util.PriorityQueue;
 
 public class ShortestJobFirst implements SchedulingAlgorithm{
     private PriorityQueue<Process> readyQueue;
-    private List<Process> processes;
     public int totalWaitingTime = 0;
+    private List<Process> processes;
     public int contextSwitchTime;
     public int totalTurnAroundTime = 0;
     GUI gui;
