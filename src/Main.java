@@ -22,7 +22,7 @@ public class Main {
 
         GUI gui = new GUI(processes, maxTime);
 
-        SchedulingAlgorithm sjf = new ShortestRemainingTimeFirst(processes,contextSwitchTime,  gui);
+        SchedulingAlgorithm sjf = new ShortestJobFirst(processes,contextSwitchTime,  gui);
         sjf.getExecutionOrder();
         sjf.getWaitingTime();
         sjf.getTurnAroundTime();
